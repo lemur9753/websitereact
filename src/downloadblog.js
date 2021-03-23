@@ -26,8 +26,8 @@ class Downloadblog extends Component {
 			dates:[],
 			error:'',
 			index:0,
-			cardnumbers: 0,
-			pagenumber: 0,
+			cardnumbers: initialcardnumbers,
+			pagenumber: initialpagenumber,
 			blogentryamount: 2,
 			items:[],
 		}
@@ -35,12 +35,13 @@ class Downloadblog extends Component {
 
 	componentDidMount(){
 		this.getContentAmount();
-		this.handleInitialParams();
+		this.handleCards();
+		//this.handleInitialParams();
 	}
 
 	componentDidUpdate(prevProps, prevState){
 		if(prevState.cardnumbers!==this.state.cardnumbers||prevState.pagenumber!==this.state.pagenumber){
-			this.updateUrl();
+			//this.updateUrl();
 			this.handleCards();
 		}
 	}
@@ -49,7 +50,7 @@ class Downloadblog extends Component {
 		axios.Cancel();
 	}
 
-	handleInitialParams(){
+	/*handleInitialParams(){
 		var parsedcardnumber = parseInt(this.props.match.params.cardnumber);
 		var parsedpagenumber = parseInt(this.props.match.params.pagenumber);
 
@@ -97,7 +98,7 @@ class Downloadblog extends Component {
 			cardnumbers: parsedcardnumber,
 			pagenumber: parsedpagenumber,
 		})
-	}
+	}*/
 
 	checkPageNumber(cardnumbers, newpagenumber = 0){
 		if(newpagenumber===0){
@@ -112,6 +113,7 @@ class Downloadblog extends Component {
 	checkHighestPageNumber(optionalcardnumber){
 		return (Math.ceil(this.state.blogentryamount/(optionalcardnumber || this.state.cardnumbers)))
 	}
+
 	updateUrl(){
 		this.props.history.push(`/home/cardnumber/${this.state.cardnumbers}/pagenumber/${this.state.pagenumber}`);
 	}

@@ -142,9 +142,6 @@ function App() {
         </div>
         <div id="Content">
           <Switch>
-                <Route path="/home/cardnumber/:cardnumber/pagenumber/:pagenumber" component ={withRouter(props => <Downloadblog />)} />
-                <Route path="/home/cardnumber/:cardnumber" component ={withRouter(props => <Downloadblog />)} />
-                <Route path="/home/pagenumber/:pagenumber" component ={withRouter(props => <Downloadblog />)} />
                 <Route path="/" exact component ={withRouter(props => <Downloadblog />)} />
                 <Route path="/home" component ={withRouter(props => <Downloadblog />)} />
                 <ProtectedRoute path="/admin" loggedin={loggedin} handleLogin={handleLogin} handleLogout={handleLogout} exact component={props => <Uploadblog username={username}/>} />
