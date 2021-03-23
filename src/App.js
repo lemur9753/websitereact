@@ -1,45 +1,138 @@
 
 import './App.css';
-import React from 'react';
-import ReactDOM from 'react-dom';
-import testing from './testing/testing.js'; 
-import GetBilder from './bilder/bilder.jsx'; 
-
-import SideNav, { Toggle, Nav, NavItem, NavIcon, NavText } from '@trendmicro/react-sidenav';
-
-// Be sure to include styles at some point, probably during your bootstraping
-import './sidenav/sidenav.css';
+import React, {useState, useEffect} from 'react';
+import Uploadblog from './uploadblog.jsx'; 
+import Content from './content.js'; 
+import GetBilder from './bilder/bilder.jsx';
+import Trinkspiel from './trinkspiel.js';
+import Downloadblog from './downloadblog.jsx'; 
+import NoContent from './nocontent.js'; 
+import ProtectedRoute from './ProtectedRoute';
+import Sidebar from './sidebar.js';
+import { makeStyles } from "@material-ui/core/styles";
 import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
+  withRouter,
 } from "react-router-dom";
+import axios from 'axios';
+import { IconButton } from '@material-ui/core';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { faHome, faImages} from '@fortawesome/free-solid-svg-icons'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+const validatejwtpath = 'https://juliusannafelix.ddns.net/validatejwt.php';
+const loginpath = 'https://juliusannafelix.ddns.net/login.php';
 
-library.add(faHome, faImages)
+const useStyles = makeStyles({
+  sidenavButton: {
+    color: 'black',
+    position: 'fixed',
+    zIndex: '150',
+  },
+});
 
-var navexpanded = false;
-
-testing();
 function App() {
-  
-  return (
+
+  const [loggedin, setLogin] = useState(false);
+  const [username, setUsername] = useState('');
+  const [navexpanded, setNav] = useState(false);
+  const classes = useStyles();
+
+  const handleLogin = (username, password)  => {
+    var data = new FormData();
+		data.append('name', username);
+    data.append('pw', password);
+		axios({
+			method: 'POST',
+			url: `${loginpath}`,
+			headers: { 'content-type': 'multipart/form-data' },
+			data: data,
+		  })
+			.then(response => {
+        if(response.data.length >= 200){
+          Login();
+          handleUsername(username);
+          localStorage.setItem('jwt', response.data)
+        }
+			})
+			.catch(error => alert(`${error}`))
+  }
+
+  const Login = () => {
+    setLogin(true);
+  }
+
+  const handleLogout = e => {
+    e.preventDefault();
+    setLogin(false);
+    setUsername('');
+  }
+
+  const handleUsername = username =>{
+    setUsername(username);
+  }
+
+  const toggleNav = () =>{
     
-    <div className="App">
+    const invertedstate = !navexpanded;
+    setNav(invertedstate);
+  }
+
+  document.onscroll = headerscroll;
+
+  useEffect(() => {
+    if(!loggedin||username.length===0){
+      const jwt = localStorage.getItem('jwt');
+      if(!jwt){
+        return;
+      }
+      var data = new FormData();
+      data.append('jwt', jwt);
+      axios({
+        method: 'POST',
+        url: `${validatejwtpath}`,
+        headers: { 'content-type': 'multipart/form-data' },
+        data: data,
+        })
+        .then(response => {
+          if(typeof response.data === 'object'){
+              Login();
+              handleUsername(response.data[1])
+          }
+        })
+        .catch(error => alert(`Error: ${error}`))
+    }
+    return () => {
+      axios.Cancel();
+    }
+
+  });
+
+  const sidenavButton = () =>{
+    if(navexpanded){
+      return
+    }
+    return(
+        <IconButton onClick={() => toggleNav()} className={classes.sidenavButton}>
+            <FontAwesomeIcon icon={faBars} size="lg"/>
+        </IconButton>
+        )
+  }
+
+  return (
+    <>
+    <div id="App">
+      {sidenavButton()}
       <Router>
+      <Sidebar expanded={navexpanded} toggleNav={toggleNav}/>
       <div id="Main" >
         <div id="top-container">
           <h1>
-          testing
-          <br/>
-          <testing/>
-          test
+            <br/>
+            <br/>
           </h1>
-          <div class="headerwrapper" >
+          <div className="headerwrapper" >
            <header className="App-header" id="App-header">
              <h1>
                Julius Anna Felix
@@ -49,246 +142,36 @@ function App() {
         </div>
         <div id="Content">
           <Switch>
-                <Route path="/" exact component={props => <Home />} />
-                <Route path="/home" component={props => <Home />} />
-                <Route path="/bilder" component={props => <GetBilder />} />
+                <Route path="/home/cardnumber/:cardnumber/pagenumber/:pagenumber" component ={withRouter(props => <Downloadblog />)} />
+                <Route path="/home/cardnumber/:cardnumber" component ={withRouter(props => <Downloadblog />)} />
+                <Route path="/home/pagenumber/:pagenumber" component ={withRouter(props => <Downloadblog />)} />
+                <Route path="/" exact component ={withRouter(props => <Downloadblog />)} />
+                <Route path="/home" component ={withRouter(props => <Downloadblog />)} />
+                <ProtectedRoute path="/admin" loggedin={loggedin} handleLogin={handleLogin} handleLogout={handleLogout} exact component={props => <Uploadblog username={username}/>} />
+                <Route path="/content/:contentid" component= {withRouter(props => <Content/>)} />
+                <Route path="/bilder" component={props => <GetBilder/>} />
+                <Route path="/drinking" component={props => <Trinkspiel navexpanded={navexpanded} />} />
+                <Route path="/" component={withRouter(props => <NoContent/>)} />
           </Switch>
-      </div>  
+        </div>  
       </div>
-      
-        <Route render={({ location, history }) => (
-        <React.Fragment>
-            <SideNav
-                onSelect={(selected) => {
-                    const to = '/' + selected;
-                    if (location.pathname !== to) {
-                        history.push(to);
-                    }
-                }}
-                onToggle ={(expanded) =>{
-                  if(expanded === true)
-                  {
-                  mainverkleinern();
-                  navexpanded=true;
-                  }
-                  else
-                  {
-                  mainvergrößern();
-                  navexpanded=false;
-                  }
-                  Headerscroll();
-                }
-                }
-            >
-               <SideNav.Toggle eventKey="shift"/>
-                <SideNav.Nav defaultSelected="home">
-                    <NavItem eventKey="home">
-                        <NavIcon>
-                            <i class="fas fa-home" style={{ fontSize: '1.75em' }} />
-                            <FontAwesomeIcon icon="home" size="2x"/>
-                        </NavIcon>
-                        <NavText>
-                            Home
-                        </NavText>
-                    </NavItem>
-                    <NavItem eventKey="bilder">
-                        <NavIcon> 
-                            <i className="bilder" style={{ fontSize: '1.75em' }}  />
-                            <FontAwesomeIcon icon="images" size="2x" />
-                
-                        </NavIcon>
-                        <NavText>
-                            Bilder
-                        </NavText>
-                    </NavItem>
-                </SideNav.Nav>
-            </SideNav>
-            
-          </React.Fragment>
-          )}
-          />
-          </Router>
+      </Router>
     </div>
-    
+    </>
   );
  
 }
-function mainverkleinern() {
-  document.getElementById("Main").style.marginLeft = "240px";
-}
-function mainvergrößern() {
-  document.getElementById("Main").style.marginLeft = "64px";
-}
-document.addEventListener('DOMContentLoaded', function() {
-
-  window.onscroll = function() {Headerscroll()};
-})
-
  
-function Headerscroll() {
+function headerscroll() {
   if (document.readyState === "complete" || document.readyState === "loaded") {
     var header = document.getElementById("App-header");
     if (window.pageYOffset >= 100) {
-      if(navexpanded===true )
-      {
-        header.classList.add("stickynavexpanded");
-        header.classList.remove("stickynavnotexpanded");
-        
-      }
-      else{
-        header.classList.add("stickynavnotexpanded");
-        header.classList.remove("stickynavexpanded");
-        }
-      
+        header.classList.add("stickynav");
     } 
     else {
-      header.classList.remove("stickynavexpanded");
-      header.classList.remove("stickynavnotexpanded");
+      header.classList.remove("stickynav");
     }
   }
-}
-
-
-function Home() {
-  return <p>
-  "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-    <br/>
-    "Lorem ipsum dolor sit amet, 
-  consectetur adipiscing elit, 
-  sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-  Ut enim ad minim veniam,
-  quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-  Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-  xcepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-    <br/>
-  </p>
-  
-}
-function Bilder() {
-  return new GetBilder();
 }
 
 export default App;

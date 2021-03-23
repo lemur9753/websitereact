@@ -1,0 +1,35 @@
+.topcontainer{
+  min-height:500px;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  position: relative;
+}
+
+.drinkingcontainer {
+  display: flex;
+  align-items: center;
+  justify-items: center;
+
+}
+  .addplayerbutton {
+    position: relative;
+    justify-self: left;
+    margin: 5px;
+}
+  .backbutton { 
+    width: 5%;
+    align-items: center;
+  justify-items: center;
+}
+  .forwardbutton {
+    width: 5%;
+    align-items: center;
+  justify-items: center;
+}
+  .aufgabe { 
+    width: 85%;
+    margin: 2.5%;
+    text-align: justify;
+}
