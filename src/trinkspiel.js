@@ -67,7 +67,8 @@ class Trinkspiel extends Component {
 
     componentDidMount() {
         if(!this.props.navexpanded){
-            if(localStorage.getItem('trinkspielstate')==null){
+            const trinkspielstate = localStorage.getItem('trinkspielstate')
+            if(trinkspielstate==null){
                 this.initializeGame();
             }
             else{
@@ -119,8 +120,9 @@ class Trinkspiel extends Component {
     componentWillUnmount(){
         if(!this.props.navexpanded){
             let trinkspielstate = JSON.stringify(this.state);
-            console.log(trinkspielstate);
-            localStorage.setItem('trinkspielstate',trinkspielstate);
+            if(trinkspielstate.players?.length!==0&&trinkspielstate.jetzigeaufgabenid!==0){
+                localStorage.setItem('trinkspielstate',trinkspielstate);
+            }
         }
         axios.Cancel();
     }
