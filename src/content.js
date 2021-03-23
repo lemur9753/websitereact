@@ -23,7 +23,7 @@ class Content extends Component {
 
 
 	componentDidMount(){
-        const contentnumber = this.props.match.params.contentid;
+        let contentnumber = this.props.match.params.contentid;
         if(contentnumber===undefined){
             const location = window.location.pathname
             const re = new RegExp('/content/([1-9]*)','gi')
