@@ -77,6 +77,7 @@ class Trinkspiel extends Component {
                     this.rehydrate();
                 }
                 else{
+                    localStorage.removeItem('trinkspielstate');
                     this.initializeGame();
                 }
             }
@@ -116,14 +117,11 @@ class Trinkspiel extends Component {
             })
         }
     }
-
     componentWillUnmount(){
-        if(!this.props.navexpanded){
-            let trinkspielstate = JSON.stringify(this.state);
-            if(trinkspielstate.players?.length!==0&&trinkspielstate.jetzigeaufgabenid!==0){
-                localStorage.setItem('trinkspielstate',trinkspielstate);
+            let trinkspielstate = this.state;
+            if(trinkspielstate.players.length!==0&&trinkspielstate.jetzigeaufgabenid!==0){
+                localStorage.setItem('trinkspielstate',JSON.stringify(trinkspielstate));
             }
-        }
         axios.Cancel();
     }
 
