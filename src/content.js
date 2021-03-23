@@ -23,9 +23,14 @@ class Content extends Component {
 
 
 	componentDidMount(){
-        console.log(window.location.pathname)
+        const contentnumber = this.props.match.params.contentid;
+        if(contentnumber===undefined){
+            const location = window.location.pathname
+            const re = new RegExp('/content/([1-9]*)','gi')
+            contentnumber = re.exec(location)[1]
+        }
         var formdata = new FormData();
-        formdata.append('contentid', this.props.match.params.contentid);
+        formdata.append('contentid', contentnumber);
 		axios({
 			method: 'POST',
 			url: `${contentpath}`,
