@@ -53,35 +53,44 @@ class Downloadblog extends Component {
 		var parsedcardnumber = parseInt(this.props.match.params.cardnumber);
 		var parsedpagenumber = parseInt(this.props.match.params.pagenumber);
 
-		switch(true){
-			case (parsedcardnumber>=24):
-				parsedcardnumber = 24;
-				break;
-			case (parsedcardnumber>=12):
-				parsedcardnumber = 12;
-				break;
-			case (parsedcardnumber>=6):
-				parsedcardnumber = 6;
-				break;
-			case (parsedcardnumber>=1):
-				parsedcardnumber = 1;
-				break;
-			default:
-				parsedcardnumber = initialcardnumbers;
+		if(parsedcardnumber){
+			switch(true){
+				case (parsedcardnumber>=24):
+					parsedcardnumber = 24;
+					break;
+				case (parsedcardnumber>=12):
+					parsedcardnumber = 12;
+					break;
+				case (parsedcardnumber>=6):
+					parsedcardnumber = 6;
+					break;
+				case (parsedcardnumber>=1):
+					parsedcardnumber = 1;
+					break;
+				default:
+					parsedcardnumber = initialcardnumbers;
+			}
 		}
-
-		switch(true){
-			case(parsedpagenumber===0||!parsedpagenumber):			
-				parsedpagenumber = initialpagenumber;
-				break;
-			case (parsedpagenumber>=this.checkHighestPageNumber(parsedcardnumber)):
-				parsedpagenumber = this.checkHighestPageNumber(parsedcardnumber);
-				break;
-			case (parsedpagenumber>=1):
-				parsedpagenumber = this.checkPageNumber(parsedcardnumber, parsedpagenumber);
-				break;
-			default:
-				parsedpagenumber = initialpagenumber;
+		else{
+			parsedcardnumber = initialcardnumbers;
+		}
+		if(parsedpagenumber){
+			switch(true){
+				case(parsedpagenumber===0||!parsedpagenumber):			
+					parsedpagenumber = initialpagenumber;
+					break;
+				case (parsedpagenumber>=this.checkHighestPageNumber(parsedcardnumber)):
+					parsedpagenumber = this.checkHighestPageNumber(parsedcardnumber);
+					break;
+				case (parsedpagenumber>=1):
+					parsedpagenumber = this.checkPageNumber(parsedcardnumber, parsedpagenumber);
+					break;
+				default:
+					parsedpagenumber = initialpagenumber;
+			}
+		}
+		else{
+			parsedpagenumber = initialpagenumber;
 		}
 
 		this.setState({

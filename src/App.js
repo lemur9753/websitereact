@@ -1,11 +1,11 @@
 
 import './App.css';
 import React, {useState, useEffect} from 'react';
-import Uploadblog from './uploadblog.jsx'; 
+import Uploadblog from './uploadblog.js'; 
 import Content from './content.js'; 
-import GetBilder from './bilder/bilder.jsx';
+import GetBilder from './bilder/bilder.js';
 import Trinkspiel from './trinkspiel.js';
-import Downloadblog from './downloadblog.jsx'; 
+import Downloadblog from './downloadblog.js'; 
 import NoContent from './nocontent.js'; 
 import ProtectedRoute from './ProtectedRoute';
 import Sidebar from './sidebar.js';
