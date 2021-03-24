@@ -10,10 +10,11 @@ import { useHistory, withRouter } from 'react-router-dom'
 const theme = createMuiTheme({
   typography: {
     h6: {
-      width:"370px",
+      //width: "400px",
       textAlign:"justify",
       whiteSpace:"nowrap",
       overflow:"hidden",
+      overflowWrap: "break-word",
       textOverflow:"ellipsis",
      },
     subtitle2:{
@@ -33,8 +34,8 @@ const theme = createMuiTheme({
 
 const useStyles = makeStyles((theme) => ({
   topdiv:{
-   maxWidth: "400px",
-    minWidth: "400px",
+    maxWidth: "400px",
+    //minWidth: "400px",
     minHeight:"450px",
     maxHeight:"450px",
     display: "flex",
@@ -47,7 +48,6 @@ const useStyles = makeStyles((theme) => ({
     width:"100%",
     minHeight:"12%",
     maxHeight:"12%",
-    textAlign:"justify",
     justifyItems:"center",
     justifyContent:"center",
   },
