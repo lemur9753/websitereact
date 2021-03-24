@@ -10,7 +10,7 @@ import { useHistory, withRouter } from 'react-router-dom'
 const theme = createMuiTheme({
   typography: {
     h6: {
-      //width: "400px",
+      width: "400px",
       textAlign:"justify",
       whiteSpace:"nowrap",
       overflow:"hidden",
