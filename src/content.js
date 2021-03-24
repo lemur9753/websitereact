@@ -63,7 +63,8 @@ class Content extends Component {
                 </div>
                 <hr/>
                 <div id="metadata">
-                    <pre>Geschrieben von: {this.state.author}     Zuletzt verändert am: {this.state.date}</pre>
+                    <p>Geschrieben von: {this.state.author}</p>     
+                    <p>Zuletzt verändert am: {this.state.date}</p>
                 </div>
                 <hr/>
                 <div id="content" className="sun-editor-editable" dangerouslySetInnerHTML={{ __html: this.state.content}}>
