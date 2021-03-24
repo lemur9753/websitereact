@@ -3,7 +3,7 @@ import axios from 'axios';
 import React from 'react';
 import { Component } from 'react';
 import Cards from './Cards';
-import {Grid, Select, MenuItem} from '@material-ui/core';
+import {Grid, Select, MenuItem, Typography} from '@material-ui/core';
 import { Pagination } from '@material-ui/lab';
 import {withRouter} from "react-router-dom";
 
@@ -219,7 +219,7 @@ class Downloadblog extends Component {
 		{
 			return (
 				<>
-					<pre>   Seite:  </pre>
+					<Typography>   Seite:  </Typography>
 					<Pagination
 						page={this.state.pagenumber}
 						onChange={this.handlePageNumberChange}
@@ -233,44 +233,52 @@ class Downloadblog extends Component {
 		return (<></>)
 	}
 
+	getContentSelector(){
+		return(
+			<>
+			<Typography>Wie viele Einträge sollen maximal angezeigt werden?  </Typography>
+			<Select
+				labelId="Cardnumber-select-label"
+				id="Cardnumber-simple-select"
+				value={this.state.cardnumbers}
+				onChange={this.handleCardNumberChange}
+			>
+				<MenuItem value={1}>1</MenuItem>
+				<MenuItem value={6}>6</MenuItem>
+				<MenuItem value={12}>12</MenuItem>
+				<MenuItem value={24}>24</MenuItem>
+			</Select>
+			</>
+		)
+	}
+
 	render() {
-
-		let contentselector;
-		contentselector = 	<>
-							<pre>Wie viele Einträge sollen maximal angezeigt werden?  </pre>
-							<Select
-								labelId="Cardnumber-select-label"
-								id="Cardnumber-simple-select"
-								value={this.state.cardnumbers}
-								onChange={this.handleCardNumberChange}
-							>
-								<MenuItem value={1}>1</MenuItem>
-								<MenuItem value={6}>6</MenuItem>
-								<MenuItem value={12}>12</MenuItem>
-								<MenuItem value={24}>24</MenuItem>
-							</Select>
-							</>;
-
+		
 		if(this.state.authors.length>0&&this.state.headers.length>0&&this.state.abstracts.length>0&&this.state.contents.length>0) {
 			return (
 				<>
-				<div style={{maxheight:'100px'}}>
-					<div style={{display: 'flex'}}>
-					{contentselector}{this.getPagination()}
+					<div style={{display: 'flex', justifyContent:'center'}}>
+						<div style={{display: 'flex', flexDirection:'column'}}>
+							<div style={{display: 'flex'}}>
+								{this.getContentSelector()}
+							</div>
+							<div style={{display: 'flex'}}>
+								{this.getPagination()}
+							</div>
+						</div>
 					</div>
 					<div style={{margin: 20,}}>
 						<Grid container spacing={10} style = {{padding: 5, marginTop:0}} justify="space-evenly" overflow="hidden">
 							{this.state.items}
 						</Grid>
 					</div>
-				</div>
 				</>
 			)
 		}
         else{
             return(
 				<>
-				{contentselector}
+				{this.getContentSelector()}
 				<div className="loader"/>
 				</>
 			)
