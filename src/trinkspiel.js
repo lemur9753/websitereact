@@ -200,7 +200,6 @@ class Trinkspiel extends Component {
         let aufgabe = this.state.aufgaben[this.state.jetzigeaufgabenid];
         let aufgabentext = "Aufgabe nicht vorhanden";
         let regelarray = this.regelArrayHelperFunc();
-        console.log(aufgabe)
         if(aufgabe!==undefined||aufgabe.aufgabentext !== undefined){
             aufgabentext = aufgabe.aufgabentext;
         }
@@ -227,7 +226,7 @@ class Trinkspiel extends Component {
         if(this.state.regelspeicher.length===0){
             return true
         }
-        let neueregelstring = JSON.stringify(neueregel.regel)
+        let neueregelstring = JSON.stringify(neueregel.regel.regel)
         let regelarray = this.state.regelspeicher;
         for (let index = 0; index < regelarray.length; index++) {
             const element = JSON.stringify(regelarray[index].regel);
