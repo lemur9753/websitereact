@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Drawer as MUIDrawer,
   ListItem,
@@ -51,6 +51,24 @@ const Sidebar = props => {
       location: '/drinking',
     }
   ];
+
+  useEffect(() => {
+    //sets the selected to the correct location pathname
+    switch(true){
+      case(history.location.pathname.match(/bilder/gi)?.length>0):
+        setSelected("Bilder")
+        break;
+      case(history.location.pathname.match(/drinking/gi)?.length>0):
+        setSelected("Trinkspiel")
+        break;
+      case(history.location.pathname.match(/admin/gi)?.length>0):
+        setSelected("Adminbereich")
+        break;
+      default:
+        setSelected("Home")
+        
+    }
+  },[])
 
   const onSelect = (location, key) =>{
     history.push(location);
