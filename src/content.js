@@ -32,7 +32,7 @@ class Content extends Component {
             data: formdata
 		})
 			.then(response => {
-                    var date = new Date(Date.parse(response.data[0].date));
+                    var date = new Date(Date.parse(response.data[0].date.replace(/-/g, "/")));
 					this.setState({
 						author: String(response.data[0].username).toString(),
 						header: String(response.data[0].header).toString(),
