@@ -7,7 +7,6 @@ import 'suneditor/src/assets/css/suneditor-contents.css'
 
 const contentpath = 'https://juliusannafelix.ddns.net/getcontent.php';
 
-
 class Content extends Component {
 
     constructor(props) {
@@ -24,11 +23,6 @@ class Content extends Component {
 
 	componentDidMount(){
         let contentnumber = this.props.match.params.contentid;
-        if(contentnumber===undefined){
-            const location = window.location.pathname
-            const re = new RegExp('/content/([1-9]*)','gi')
-            contentnumber = re.exec(location)[1]
-        }
         var formdata = new FormData();
         formdata.append('contentid', contentnumber);
 		axios({

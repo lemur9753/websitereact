@@ -26,8 +26,8 @@ class Downloadblog extends Component {
 			dates:[],
 			error:'',
 			index:0,
-			cardnumbers: initialcardnumbers,
-			pagenumber: initialpagenumber,
+			cardnumbers: 0,
+			pagenumber: 0,
 			blogentryamount: 2,
 			items:[],
 		}
@@ -36,12 +36,12 @@ class Downloadblog extends Component {
 	componentDidMount(){
 		this.getContentAmount();
 		this.handleCards();
-		//this.handleInitialParams();
+		this.handleInitialParams();
 	}
 
 	componentDidUpdate(prevProps, prevState){
 		if(prevState.cardnumbers!==this.state.cardnumbers||prevState.pagenumber!==this.state.pagenumber){
-			//this.updateUrl();
+			this.updateUrl();
 			this.handleCards();
 		}
 	}
@@ -50,12 +50,11 @@ class Downloadblog extends Component {
 		axios.Cancel();
 	}
 
-	/*handleInitialParams(){
+	handleInitialParams(){
 		var parsedcardnumber = parseInt(this.props.match.params.cardnumber);
 		var parsedpagenumber = parseInt(this.props.match.params.pagenumber);
 
-		if(parsedcardnumber){
-			switch(true){
+		switch(true){
 				case (parsedcardnumber>=24):
 					parsedcardnumber = 24;
 					break;
@@ -71,34 +70,26 @@ class Downloadblog extends Component {
 				default:
 					parsedcardnumber = initialcardnumbers;
 			}
-		}
-		else{
-			parsedcardnumber = initialcardnumbers;
-		}
-		if(parsedpagenumber){
-			switch(true){
-				case(parsedpagenumber===0||!parsedpagenumber):			
-					parsedpagenumber = initialpagenumber;
-					break;
-				case (parsedpagenumber>=this.checkHighestPageNumber(parsedcardnumber)):
-					parsedpagenumber = this.checkHighestPageNumber(parsedcardnumber);
-					break;
-				case (parsedpagenumber>=1):
-					parsedpagenumber = this.checkPageNumber(parsedcardnumber, parsedpagenumber);
-					break;
-				default:
-					parsedpagenumber = initialpagenumber;
-			}
-		}
-		else{
-			parsedpagenumber = initialpagenumber;
+		
+		switch(true){
+			case(parsedpagenumber===0||!parsedpagenumber):			
+				parsedpagenumber = initialpagenumber;
+				break;
+			case (parsedpagenumber>=this.checkHighestPageNumber(parsedcardnumber)):
+				parsedpagenumber = this.checkHighestPageNumber(parsedcardnumber);
+				break;
+			case (parsedpagenumber>=1):
+				parsedpagenumber = this.checkPageNumber(parsedcardnumber, parsedpagenumber);
+				break;
+			default:
+				parsedpagenumber = initialpagenumber;
 		}
 
 		this.setState({
 			cardnumbers: parsedcardnumber,
 			pagenumber: parsedpagenumber,
 		})
-	}*/
+	}
 
 	checkPageNumber(cardnumbers, newpagenumber = 0){
 		if(newpagenumber===0){
