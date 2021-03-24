@@ -358,11 +358,11 @@ class Trinkspiel extends Component {
             <Button
                 variant="contained"
                 color="primary"
-                startIcon={<FontAwesomeIcon icon={faUserPlus} size="sm"/>}
-                endIcon={<FontAwesomeIcon icon={faUserMinus} size="sm"/>}
                 onClick={() => this.handlePlayerClickOpen()}
             >
-            /
+                <FontAwesomeIcon icon={faUserPlus} size="2x"/>
+                    /
+                <FontAwesomeIcon icon={faUserMinus} size="2x"/>
             </Button>
             <Dialog open={this.state.playerAddModalOpen} onClose={() => this.handlePlayerClickClose()}>
                 <Button
@@ -477,11 +477,10 @@ class Trinkspiel extends Component {
                 <Button
                     variant="contained"
                     color="primary"
-                    startIcon={<FontAwesomeIcon icon={faTasks} size="sm"/>}
                     onClick={() => this.handleBestehendeRegelnClickOpen()}
                     disabled={!this.state.getBestehendeRegelnPossible}
                 >
-                /
+                    <FontAwesomeIcon icon={faTasks} size="2x"/>
                 </Button>
                 <Dialog 
                     open={this.state.bestehendeRegelnModalOpen} 
@@ -533,27 +532,30 @@ class Trinkspiel extends Component {
                     <>
                     <div className="topcontainer">
                         {this.getRegelAufgehoben()}
-                        <div className="addplayerbutton">
-                            {this.getPlayerControl()}
-                        </div>
-                        <div className="addplayerbutton">
-                            {this.getBestehendeRegeln()}
+                        <div className="controls">
+                            <div className="backbutton">
+                                <Button variant="contained" onClick={() => this.handleBackClick()} color="primary">
+                                    <FontAwesomeIcon icon={faChevronLeft} size="2x"/>
+                                </Button>
+                            </div>
+                            <div className="addplayerbutton">
+                                {this.getPlayerControl()}
+                            </div>
+                            <div className="getregelbutton">
+                                {this.getBestehendeRegeln()}
+                            </div>
                         </div>
                         <div className="drinkingcontainer">
-                            <div className="backbutton">
-                                <IconButton onClick={() => this.handleBackClick()} color="primary">
-                                    <FontAwesomeIcon icon={faChevronLeft} size="2x"/>
-                                </IconButton>
-                            </div>
                             <div className="aufgabe" style={{whiteSpace: 'pre-line'}}>
                                 <h1>
                                     {this.state.jetzigeaufgabe}
                                 </h1>
                             </div>
                             <div className="forwardbutton">
-                                <IconButton onClick={() => this.handleForwardClick()} color="primary">
-                                    <FontAwesomeIcon icon={ faChevronRight} size="2x"/>
-                                </IconButton>
+                                <Button variant="contained" onClick={() => this.handleForwardClick()} color="primary">
+                                    {/*<FontAwesomeIcon icon={ faChevronRight} size="2x"/>*/}
+                                    Ok
+                                </Button>
                             </div>
                         </div>
                     </div>
