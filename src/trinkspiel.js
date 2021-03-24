@@ -3,7 +3,7 @@ import React from 'react';
 import { Component } from 'react';
 import {IconButton, Button, Dialog,DialogTitle, DialogContent, FormControl, FilledInput, InputAdornment} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft, faChevronRight, faMinus, faPlus, faTasks, faTimes, faUserMinus, faUserPlus} from '@fortawesome/free-solid-svg-icons'
+import { faChevronLeft, faMinus, faPlus, faTasks, faTimes, faUserMinus, faUserPlus} from '@fortawesome/free-solid-svg-icons'
 import './trinkspiel.css'
 const trinkspielpath = 'https://juliusannafelix.ddns.net/trinkspiel.php';
 const trinkspielamountpath = 'https://juliusannafelix.ddns.net/gettrinkspielamount.php';
