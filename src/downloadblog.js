@@ -177,7 +177,7 @@ class Downloadblog extends Component {
 			let date;
 			for(var i = 0; i < response.data.length-1; i++) {
 				obj = response.data[i];
-				date = new Date(Date.parse(obj.date));
+				date = new Date(Date.parse(obj.date.replace(/-/g, "/")));
 				// eslint-disable-next-line
 				this.setState(previousState => ({
 					contentid: [...previousState.contentid, obj.id],
