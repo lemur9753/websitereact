@@ -102,7 +102,7 @@ class GetBilder extends Component {
                     maxWidth={'sm'}
                     open={this.state.modalopen}
                     onClose={() => this.closeModalHelper()}
-                    transitionDuration={300}
+                    transitionDuration={{enter: 400}}
                 >
                     <div style={{position:'fixed', padding: '5px', paddingLeft: '10px', zIndex:'400'}}>
                         <button onClick={() => this.closeModalHelper()} style={{all: 'unset', cursor:'pointer'}}>
@@ -125,7 +125,7 @@ class GetBilder extends Component {
             maxWidth={'sm'}
             open={this.state.modalopen}
             onClose={() => this.closeModalHelper()}
-            transitionDuration={300}
+            transitionDuration={400}
         >
             <div style={{position:'fixed', padding: '5px', paddingLeft: '10px'}}>
                 <button onClick={() => this.closeModalHelper()} style={{all: 'unset', cursor:'pointer'}}>
