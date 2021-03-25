@@ -6,7 +6,7 @@ import './bilder.css';
 import axios from 'axios';
 import {Dialog} from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faTimes} from '@fortawesome/free-solid-svg-icons'
+import {faPlay, faTimes} from '@fortawesome/free-solid-svg-icons'
 
 const bilderpath = 'https://juliusannafelix.ddns.net/getinsta.php';
 
@@ -15,24 +15,26 @@ class GetBilder extends Component {
     constructor(props) {
 		super(props)
 		this.state = {
-			images:[] ,
+			medias:[] ,
             error:'',
             modalopen:false,
+            mediasrc:'',
+            isvideo:false,
 		}
 	}
 
     componentDidMount() {
-        if(localStorage.getItem('bilderstate')!=='null'){
-            let localstorageimages = JSON.parse(localStorage.getItem('bilderstate'))
+        if(localStorage.getItem('mediastate')!=='null'){
+            let localstoragemedias = JSON.parse(localStorage.getItem('mediastate'))
             this.setState({
-                images: localstorageimages,
+                medias: localstoragemedias,
             })
         }
         this.getInstaBilder();
     }
 
     componentWillUnmount(){
-        localStorage.setItem('bilderstate',JSON.stringify(this.state.images));
+        localStorage.setItem('mediastate',JSON.stringify(this.state.medias));
         axios.Cancel();
     }
 
@@ -49,68 +51,140 @@ class GetBilder extends Component {
                     })
                 }
                 else{
-                    let newimages = [];
-                    Object.values(response.data).map((img) => newimages.push(img));
-                    let imagessame = JSON.stringify(newimages) === JSON.stringify(this.state.images);
-                    if(!imagessame){
-                        this.setState({ images: newimages });
+                    let newmedias = [];
+                    Object.values(response.data).map((media) => 
+                    {
+                        if(media[0]==='video'){                 
+                            newmedias.push({"isvideo": true, "picurl": media[1], "vidurl":media[2]})
+                        }
+                        else{
+                            newmedias.push({"isvideo": false, "picurl": media[1]})
+                        }
+                        return null;
+                    });
+                    let mediassame = JSON.stringify(newmedias) === JSON.stringify(this.state.medias);
+                    if(!mediassame){
+                        this.setState({ medias: newmedias });
                     }
                 } 
 			})
 			.catch(error => this.setState({ error: error.message }));
     }
 
-    openModal(imagesrc){
-        this.setState({
-            modalopen:true,
-            imagesrc: imagesrc,
-        })
+    openModal(media){
+        if(media.isvideo){
+            this.setState({
+                modalopen:true,
+                mediasrc: media.vidurl,
+                isvideo: true
+            })
+        }
+        else{
+            this.setState({
+                modalopen:true,
+                mediasrc: media.picurl,
+                isvideo: false
+            })
+        }
     }
     
     closeModalHelper(){
         this.setState({
             modalopen : false,
-            imagesrc: '',
+            mediasrc: '',
         })
     }
-    
 
-    render() {
-        if (this.state?.images?.length>1){
-        return (
-            <>
+    getModal(){
+        if(this.state.isvideo){
+            return(
                 <Dialog
                     maxWidth={'sm'}
                     open={this.state.modalopen}
                     onClose={() => this.closeModalHelper()}
                     transitionDuration={300}
                 >
-                    <div style={{position:'fixed', padding: '5px', paddingLeft: '10px'}}>
+                    <div style={{position:'fixed', padding: '5px', paddingLeft: '10px', zIndex:'400'}}>
                         <button onClick={() => this.closeModalHelper()} style={{all: 'unset', cursor:'pointer'}}>
                             <FontAwesomeIcon icon={faTimes} size="lg" color="white"/>
                         </button>
                     </div>
-                    <img
+                    <video
                         width="100%"
                         height="100%"
-                        src={this.state.imagesrc}
                         alt={""}
-                    />
-                </Dialog>
+                        controls
+                        autoplay="true"
+                    >
+                         <source src={this.state.mediasrc} type="video/mp4"></source>
+                    </video>
+                </Dialog>)
+        }
+        return(
+        <Dialog
+            maxWidth={'sm'}
+            open={this.state.modalopen}
+            onClose={() => this.closeModalHelper()}
+            transitionDuration={300}
+        >
+            <div style={{position:'fixed', padding: '5px', paddingLeft: '10px'}}>
+                <button onClick={() => this.closeModalHelper()} style={{all: 'unset', cursor:'pointer'}}>
+                    <FontAwesomeIcon icon={faTimes} size="lg" color="white"/>
+                </button>
+            </div>
+            <img
+                width="100%"
+                height="100%"
+                src={this.state.mediasrc}
+                alt={""}
+            />
+        </Dialog>
+        )
+    }
+    
+    getMedia(media, i){
+        if(media.isvideo){
+            return(
+                <button key ={i} onClick={() => this.openModal(media)} style={{all : 'unset', cursor:'pointer'}}>
+                    <div style={{width: "100%", display: "flex",alignItems:'center', justifyContent: 'center', position:'relative'}}>
+                        <div style={{position: "absolute", opacity: "0.5", color:'white'}}>
+                            <FontAwesomeIcon icon={faPlay} size="3x"/>
+                        </div>
+                        <img
+                            key={i}
+                            src={media.picurl}
+                            alt={""}
+                            style={{width: "100%", display: "block"}}                        
+                        />
+                    </div>
+                </button>
+            )
+        }
+        return(
+            <button key ={i} onClick={() => this.openModal(media)} style={{all : 'unset', cursor:'pointer'}}>
+                <img
+                    key={i}
+                    src={media.picurl}
+                    alt={""}
+                    style={{width: "100%", display: "block"}}                        
+                />
+            </button>
+        )
+
+
+    }
+
+    render() {
+        if (this.state?.medias?.length>1){
+        return (
+            <>
+                {this.getModal()}
             <ResponsiveMasonry
                 columnsCountBreakPoints={{350: 1, 750: 2, 900: 3, 1200: 4, 1500: 5}}
             >
                 <Masonry gutter="20px">
-                   {this.state.images.map((image, i) => (
-                    <button key ={i} onClick={() => this.openModal(image)} style={{all : 'unset', cursor:'pointer'}}>
-                        <img
-                            key={i}
-                            src={image}
-                            alt={""}
-                            style={{width: "100%", display: "block"}}                        
-                        />
-                    </button>
-                   )
+                   {this.state.medias.map((media, i) => 
+                        this.getMedia(media, i)
                    )}
                 </Masonry>
             </ResponsiveMasonry>
