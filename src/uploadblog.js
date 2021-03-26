@@ -5,7 +5,7 @@ import { Component } from 'react';
 import SunEditor from 'suneditor-react';
 import 'suneditor/dist/css/suneditor.min.css'; // Import Sun Editor's CSS File
 import { Checkbox, TextField } from '@material-ui/core';
-import ViewTrinkspiel from './viewtrinkspielaufgaben';
+import Trinkspieledit from './trinkspieledit';
 
 const uploadpath = 'https://juliusannafelix.ddns.net/uploadblog.php';
 const uploadtrinkspielpath = 'https://juliusannafelix.ddns.net/uploadtrinkspiel.php';
@@ -206,15 +206,9 @@ constructor(props) {
 			whattoupload:'',
 		})
 	}
-	gotoContentUpload(){
+	goto(location){
 		this.setState({
-			whattoupload:'blogcontent'
-		})
-	}
-
-	gotoTrinkspielUpload(){
-		this.setState({
-			whattoupload:'trinkspiel'
+			whattoupload:location
 		})
 	}
 
@@ -431,7 +425,7 @@ constructor(props) {
 						<br/>
 						<br/>
 						<br/>
-						<ViewTrinkspiel/>
+						<Trinkspieledit/>
 						</>
 					)
 				}
@@ -439,8 +433,8 @@ constructor(props) {
 			else{
 				return (
 					<>
-					<button onClick={() => this.gotoContentUpload()}> Blog </button>
-					<button onClick={() => this.gotoTrinkspielUpload()}> Trinkspiel </button>
+					<button onClick={() => this.goto('blogcontent')}> Blog </button>
+					<button onClick={() => this.goto('trinkspiel')}> Trinkspiel </button>
 					</>
 				)
 			}

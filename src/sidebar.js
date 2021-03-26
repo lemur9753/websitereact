@@ -68,6 +68,7 @@ const Sidebar = props => {
         setSelected("Home")
         
     }
+    //eslint-disable-next-line
   },[])
 
   const onSelect = (location, key) =>{
