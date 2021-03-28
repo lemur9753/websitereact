@@ -32,7 +32,7 @@ class Trinkspieledit extends Component {
 			aufgaben:[],
             error:'',
             editedtext: '',
-            editableid: 5000,
+            editableid: 9999,
             trinkspieluser: 0,
             trinkspielusermitnummer: 0,
             maxaufgaben: 0,
@@ -132,6 +132,9 @@ class Trinkspieledit extends Component {
 	}
 
     handleTrinkspielEdit = () => {
+        if(this.state.editableid===9999){
+            return
+        }
         var contentdata = new FormData();
         if(this.state.editedtext.length===0){
             contentdata.append('id',this.state.editableid)
