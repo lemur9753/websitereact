@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import { Route } from 'react-router-dom';
 
-const ProtectedRoute = ({ component: Component,loggedin,handleLogin, ...rest }) => {
+const ProtectedRoute = ({ component: Component,loggedin,handleLogin,loginerror, ...rest }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -47,7 +47,10 @@ const ProtectedRoute = ({ component: Component,loggedin,handleLogin, ...rest }) 
         </form>
         <button onClick={() => handleLogin(username, password)}>
             Submit
-          </button>
+        </button>
+        <p>
+          {loginerror}
+        </p>
       </div>
     );
   }

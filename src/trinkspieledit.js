@@ -143,7 +143,6 @@ class Trinkspieledit extends Component {
             })
             .then(response => {
                 if(response.data>0){
-                    alert('Aufgabe konnte erfolgreich gelöscht werden')
                 }
                 else{
                     alert('Aufgabe konnte nicht gelöscht werden')
@@ -167,7 +166,6 @@ class Trinkspieledit extends Component {
                         .then(response => {
                             console.log(response)
                         if(response.data>0){
-                            alert('Content konnte hochgeladen werden')
                         }
                         else{
                             alert('Content konnte nicht hochgeladen werden')

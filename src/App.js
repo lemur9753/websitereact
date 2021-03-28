@@ -37,6 +37,7 @@ function App() {
   const [loggedin, setLogin] = useState(false);
   const [username, setUsername] = useState('');
   const [navexpanded, setNav] = useState(false);
+  const [loginerror, setLoginerror] = useState('');
   const classes = useStyles();
 
   const handleLogin = (username, password)  => {
@@ -55,11 +56,15 @@ function App() {
           handleUsername(username);
           localStorage.setItem('jwt', response.data)
         }
+        else{
+          setLoginerror('Username und/oder Passwort ist falsch.')
+        }
 			})
 			.catch(error => alert(`${error}`))
   }
 
   const Login = () => {
+    setLoginerror('');
     setLogin(true);
   }
 
@@ -147,7 +152,7 @@ function App() {
                 <Route path="/home/pagenumber/:pagenumber" component ={withRouter(props => <Downloadblog />)} />
                 <Route path="/" exact component ={withRouter(props => <Downloadblog />)} />
                 <Route path="/home" component ={withRouter(props => <Downloadblog />)} />
-                <ProtectedRoute path="/admin" loggedin={loggedin} handleLogin={handleLogin} handleLogout={handleLogout} exact component={props => <Uploadblog username={username}/>} />
+                <ProtectedRoute path="/admin" loggedin={loggedin} handleLogin={handleLogin} handleLogout={handleLogout} loginerror={loginerror} exact component={props => <Uploadblog username={username}/>} />
                 <Route path="/content/:contentid" component= {withRouter(props => <Content/>)} />
                 <Route path="/bilder" component={props => <GetBilder/>} />
                 <Route path="/drinking" component={props => <Trinkspiel navexpanded={navexpanded} />} />
