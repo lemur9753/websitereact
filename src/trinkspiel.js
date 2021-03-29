@@ -57,7 +57,6 @@ class Trinkspiel extends Component {
             players:['','', '',''],
             maxaufgaben: 0,
             playerAddModalOpen: false,
-            playerAddModalError: '',
             regelspeicher:[],
             regelAufhebeModaltext:'',
             regelAufhebeModalOpen: false,
@@ -322,18 +321,11 @@ class Trinkspiel extends Component {
 
     handlePlayerClickClose(){
         let cleanedPlayerArray = this.state.players.filter(function(e){return e});
-        if(cleanedPlayerArray.length===0){
-            this.setState({
-                playerAddModalError:'Bitte mindestens einen Spieler einfügen.'
-            })
-        }
-        else{
-            this.setState({
-                playerAddModalError: '',
-                playerAddModalOpen: false,
-                players: cleanedPlayerArray
-            })
-        }
+        this.setState({
+            playerAddModalError: '',
+            playerAddModalOpen: false,
+            players: cleanedPlayerArray
+        })
     }
 
     handlePlayerChange = (e) => {
@@ -411,9 +403,6 @@ class Trinkspiel extends Component {
                         </>
                     )}
                     <br/>
-                    <div style={{marginBottom:'20px'}}>
-                        {this.state.playerAddModalError}
-                    </div>
                     <Button
                         variant="contained"
                         color="primary"
