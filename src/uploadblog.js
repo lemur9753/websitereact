@@ -155,12 +155,9 @@ class Uploadblog extends Component {
 		if (this.validateUploadData()) {
 			var contentdata = new FormData();
 			contentdata.append('name', this.state.name);
-			contentdata.append('header', this.state.header.padEnd(headerLength - this.state.headerLength));
+			contentdata.append('header', this.state.header);
 			contentdata.append('picture', this.state.picture);
-			contentdata.append(
-				'abstract',
-				this.state.abstract.padEnd(abstractLength - this.state.abstractLength)
-			);
+			contentdata.append('abstract', this.state.abstract);
 			contentdata.append('content', this.state.message);
 			axios({
 				method: 'POST',
