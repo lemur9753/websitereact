@@ -190,7 +190,7 @@ class Downloadblog extends Component {
 						contents: [...previousState.contents, obj.content],
 						dates: [
 							...previousState.dates,
-							`${date.getUTCDate()}.${date.getUTCMonth()}.${date.getFullYear()}`,
+							`${date.getUTCDate()}.${date.getUTCMonth() + 1}.${date.getFullYear()}`,
 						],
 						index: this.state.index + 1,
 					}));
