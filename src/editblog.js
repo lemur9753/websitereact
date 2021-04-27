@@ -86,9 +86,9 @@ function Editblog({ username }) {
 		if (validateUploadData()) {
 			var contentdata = new FormData();
 			contentdata.append('id', contentid);
-			contentdata.append('header', headertext.padEnd(maxHeaderLength - headerLength));
+			contentdata.append('header', headertext);
 			contentdata.append('picture', picture);
-			contentdata.append('abstract', abstracttext.padEnd(maxAbstractLength - abstractLength));
+			contentdata.append('abstract', abstracttext);
 			contentdata.append('content', editorcontent);
 			axios({
 				method: 'POST',
