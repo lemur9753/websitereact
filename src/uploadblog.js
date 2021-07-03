@@ -166,6 +166,7 @@ class Uploadblog extends Component {
 				data: contentdata,
 			})
 				.then((response) => {
+					console.log(response);
 					if (response.data > 0) {
 						this.setState({
 							uploaderfolgreich: true,

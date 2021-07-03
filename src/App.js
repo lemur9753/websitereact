@@ -9,12 +9,7 @@ import NoContent from './nocontent.js';
 import ProtectedRoute from './ProtectedRoute';
 import Sidebar from './sidebar.js';
 import { makeStyles } from '@material-ui/core/styles';
-import {
-	HashRouter as Router,
-	Switch,
-	Route,
-	withRouter,
-} from 'react-router-dom';
+import { HashRouter as Router, Switch, Route, withRouter } from 'react-router-dom';
 import axios from 'axios';
 import { IconButton } from '@material-ui/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -114,10 +109,7 @@ function App() {
 			return;
 		}
 		return (
-			<IconButton
-				onClick={() => toggleNav()}
-				className={classes.sidenavButton}
-			>
+			<IconButton onClick={() => toggleNav()} className={classes.sidenavButton}>
 				<FontAwesomeIcon icon={faBars} size='lg' />
 			</IconButton>
 		);
@@ -181,25 +173,18 @@ function App() {
 									handleLogout={handleLogout}
 									loginerror={loginerror}
 									exact
-									component={(props) => (
-										<Uploadblog username={username} />
-									)}
+									component={(props) => <Uploadblog username={username} />}
 								/>
 								<Route
 									path='/content/:contentid'
 									component={withRouter((props) => (
-										<Content />
+										<Content user={username} />
 									))}
 								/>
-								<Route
-									path='/bilder'
-									component={(props) => <GetBilder />}
-								/>
+								<Route path='/bilder' component={(props) => <GetBilder />} />
 								<Route
 									path='/drinking'
-									component={(props) => (
-										<Trinkspiel navexpanded={navexpanded} />
-									)}
+									component={(props) => <Trinkspiel navexpanded={navexpanded} />}
 								/>
 								<Route
 									path='/'
@@ -217,10 +202,7 @@ function App() {
 }
 
 function headerscroll() {
-	if (
-		document.readyState === 'complete' ||
-		document.readyState === 'loaded'
-	) {
+	if (document.readyState === 'complete' || document.readyState === 'loaded') {
 		var header = document.getElementById('App-header');
 		if (window.pageYOffset >= 100) {
 			header.classList.add('stickynav');

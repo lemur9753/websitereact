@@ -66,7 +66,7 @@ class Content extends Component {
 						dangerouslySetInnerHTML={{ __html: this.state.content }}
 					></div>
 				</div>
-				{/*<Comments blogid={this.props.match.params.contentid} />*/}
+				<Comments blogid={this.props.match.params.contentid} user={this.props.username} />
 			</>
 		);
 	}
