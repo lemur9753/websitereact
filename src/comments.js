@@ -42,6 +42,7 @@ function Comments({ user, blogid }) {
 		})
 			.then((response) => {
 				console.log(response);
+				window.location.reload();
 			})
 			.catch((err) => {
 				console.error(err);
@@ -76,6 +77,7 @@ function Comments({ user, blogid }) {
 		})
 			.then((response) => {
 				console.log(response);
+				window.location.reload();
 			})
 			.catch((err) => {
 				console.error(err);
